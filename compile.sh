@@ -1,0 +1,1 @@
+gcc -O3 hifi_gan_demo.c -lm 
