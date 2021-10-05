@@ -123,7 +123,7 @@ int main(){
 
     /*The first upsampling process*/
     float * ups0_out = (float*) calloc(frame_nums*8*64, sizeof(float));
-    ups0(conv_pre_out, ups0_out, frame_nums);
+    ups0(conv_pre_out, ups0_out, frame_nums); 
 
     float * resblock0_out = (float*) calloc(frame_nums*8*64, sizeof(float));
     resblock0(ups0_out, resblock0_out, frame_nums*8);
@@ -134,7 +134,7 @@ int main(){
     float * resblock2_out = (float*) calloc(frame_nums*8*64, sizeof(float));
     resblock2(ups0_out, resblock2_out, frame_nums*8);
 
-    for(i = 0; i < frame_nums * 8; i++){
+    for(i = 0; i < frame_nums * 8 *64; i++){
         resblock2_out[i] = (resblock0_out[i] + resblock1_out[i] + resblock2_out[i])/3;
     }
 
@@ -163,7 +163,7 @@ int main(){
     float * resblock5_out = (float*) calloc(frame_nums*2048, sizeof(float));
     resblock5(ups1_out, resblock5_out, frame_nums*64);
 
-    for(i = 0; i < frame_nums * 64; i++){
+    for(i = 0; i < frame_nums*2048; i++){
         resblock5_out[i] = (resblock3_out[i] + resblock4_out[i] + resblock5_out[i])/3;
     }
 
@@ -191,9 +191,11 @@ int main(){
     float * resblock8_out = (float*) calloc(frame_nums*2048, sizeof(float));
     resblock8(ups2_out, resblock8_out, frame_nums*128);
 
-    for(i = 0; i < frame_nums * 128; i++){
+    for(i = 0; i < frame_nums*2048; i++){
         resblock8_out[i] = (resblock6_out[i] + resblock7_out[i] + resblock8_out[i])/3;
     }
+
+
     free(resblock5_out);
     free(ups2_out);
     free(resblock6_out);
@@ -220,7 +222,7 @@ int main(){
     resblock11(ups3_out, resblock11_out, frame_nums*256);
 
 
-    for(i = 0; i < frame_nums * 256; i++){
+    for(i = 0; i < frame_nums*2048; i++){
         resblock11_out[i] = (resblock9_out[i] + resblock10_out[i] + resblock11_out[i])/3;
     }
 
@@ -236,21 +238,18 @@ int main(){
     float * conv_post_out = (float*) calloc(frame_nums*256, sizeof(float));
     conv_post(resblock11_out, conv_post_out, frame_nums*256);
 
+
     short wav_out[frame_nums*256];
 
     for(i = 0; i < frame_nums*256; i++){
-        conv_post_out[i] = floor(10000*conv_post_out[i])/10000;
         wav_out[i] = (short) (tanh(conv_post_out[i]) * 32768.0);
     }
-    for(i = 0; i < 24; i++){
-        printf("%d,",wav_out[i]);
-    }
+
 
     FILE * fout;
     fout = fopen("output.raw", "wb");
     fwrite(wav_out, sizeof(short), frame_nums*256, fout);
     fclose(fout);
-
     finish = clock();
     duration = (double)(finish - start) / CLOCKS_PER_SEC;
     printf("%f seconds\n", duration);
