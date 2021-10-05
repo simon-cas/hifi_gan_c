@@ -5,8 +5,11 @@
 #include <stdlib.h>
 
 
-int main(){
-    
+int main(int argc, char **argv){
+    if (argc!=3) {
+        fprintf(stderr, "usage: %s <input speech> <output speech>\n", argv[0]);
+    return 1;
+    }
     int i, j, k;
     clock_t start, finish;
     double  duration;
@@ -36,7 +39,7 @@ int main(){
 
     start = clock();
 
-    wavfile = fopen("p234_001_22k.wav", "rb");
+    wavfile = fopen(argv[1], "rb");
 
     fseek(wavfile, 0, SEEK_END);
 
@@ -247,9 +250,14 @@ int main(){
 
 
     FILE * fout;
-    fout = fopen("output.raw", "wb");
+    fout = fopen(argv[2], "wb");
     fwrite(wav_out, sizeof(short), frame_nums*256, fout);
     fclose(fout);
+    free(resblock11_out);
+    resblock11_out = NULL;
+    free(conv_post_out);
+    conv_post_out = NULL;
+    
     finish = clock();
     duration = (double)(finish - start) / CLOCKS_PER_SEC;
     printf("%f seconds\n", duration);
