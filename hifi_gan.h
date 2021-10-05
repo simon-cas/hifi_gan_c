@@ -132,6 +132,7 @@ void conv_post(float * resblock11_out, float * conv_post_out, int frame_nums){
     }
 }
 
+
 void ups0(float * conv_pre_out, float * ups0_out, int frame_nums){
     int i;
     int j;
@@ -384,7 +385,9 @@ void resblock0(float * ups0_out, float * resblock0_output, int frame_nums){
     for(i = 0; i < frame_nums * 64; i++){
         resblock0_conv20[i] += ups0_out[i];
     }
-
+    for(i = 0; i < 64; i++){
+        //printf("%f,", resblock0_conv20[i]);
+    }
     conv_resblock0(resblock0_conv20, resblock0_conv11, resblocks_0_convs1_1_weight, resblocks_0_convs1_1_bias, 3, 3, frame_nums);
     conv_resblock0(resblock0_conv11, resblock0_conv21, resblocks_0_convs2_1_weight, resblocks_0_convs2_1_bias, 1, 1, frame_nums);
     for(i = 0; i < frame_nums * 64; i++){
@@ -402,9 +405,6 @@ void resblock0(float * ups0_out, float * resblock0_output, int frame_nums){
         resblock0_output[i] = resblock0_conv22[i];
     }
 
-    for(i = 0; i < 64; i++){
-        //printf("%f,", resblock0_conv10[i]);
-    }
 
 
     free(resblock0_conv10);
