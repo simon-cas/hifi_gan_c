@@ -1,1 +1,1 @@
-gcc -O3 hifi_gan_demo.c -lm 
+gcc -Wall -W -O3 hifi_gan_demo.c -o hifi_gan_demo -lm 
