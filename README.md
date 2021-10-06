@@ -1,5 +1,5 @@
 # hifi_gan_c
-A purely header only c version of hifi-gan
+A purely header only c version of hifi-gan, to reproduce https://github.com/jik876/hifi-gan.
 
 # how to run
 1. sh compile.sh
